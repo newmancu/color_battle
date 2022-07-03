@@ -2,6 +2,7 @@ version: '3.8'
 services:
   web:
     build: .
+    entrypoint: ./entrypoint.sh
     command: python ./color_battle/manage.py runserver 0.0.0.0:8000
     ports:
       - 8000:8000
@@ -10,6 +11,17 @@ services:
       - ./.dev.env
     depends_on:
       - db
+      - redis
+    volumes:
+      - ./color_battle:/usr/src/web/color_battle
+  web_ws:
+    build: .
+    command: bash -c "cd ./color_battle && daphne -b 0.0.0.0 -p 8001 color_battle.asgi:application"
+    restart: always
+    env_file:
+      - ./.dev.env
+    depends_on:
+      - web
     volumes:
       - ./color_battle:/usr/src/web/color_battle
   db:
@@ -19,5 +31,22 @@ services:
       - ./.dev.env
     volumes:
       - db_volume:/var/lib/postgres/
+  nginx:
+    build: ./nginx
+    restart: always
+    ports:
+      - 80:80
+    depends_on:
+      - web
+      - db
+      - web_ws
+    volumes:
+      - ./logs/nginx/:/val/log/nginx
+  redis:
+    image: redis
+    volumes:
+      - redis_db:/opt/redis/data
+
 volumes:
   db_volume:
+  redis_db:
