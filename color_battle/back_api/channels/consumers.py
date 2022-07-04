@@ -5,25 +5,25 @@ from channels.generic.websocket import AsyncJsonWebsocketConsumer
 class ColorMapConsumer(AsyncJsonWebsocketConsumer):
 
   async def connect(self):
-
     await self.accept()
+
+    await self.send_json({
+      "message": "Connected!!!!",
+      "user": self.scope['user'].has_perm('back_api.worker'),
+      "scope": str(type(self.scope))
+    })
 
   
   async def disconnect(self, code):
 
-    await self.channel_layer.group_discard(
-      self.room_group_name,
-      self.channel_name
-    )
+    await self.send_json({
+      "message": "Disconnected"
+    })
+    print(f'close {code}')
+    await self.close()
 
   async def receive_json(self, data):
     msg = data
-    await self.channel_layer.group_send(
-      self.room_group_name,
-      msg
-    )
-
-  async def chat_message(self, event):
-
-    msg = event['message']
-    await self.send(text_data=msg)
+    await self.send_json({
+      "message": "Received"
+    })
