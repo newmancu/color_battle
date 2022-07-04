@@ -9,6 +9,12 @@ from back_api import models
 
 """Permisions"""
 class IsBot(BasePermission):
+  """
+    FO: add field 'group' in JWT token to reduce
+        number of request to DB
+    FO: use 'group' from JWT token for permissions'
+        check
+  """
   def has_permission(self, request, view):
     t = request.user.has_perm('back_api.bot')
     return t
@@ -20,6 +26,12 @@ class IsTg(BasePermission):
     return t
 
 class IsWorker(BasePermission):
+  """
+    FO: add field 'group' in JWT token to reduce
+        number of request to DB
+    FO: use 'group' from JWT token for permissions'
+        check
+  """
   def has_permission(self, request, view):
     t = request.user.has_perm('back_api.worker')
     return t
@@ -28,6 +40,13 @@ class IsWorker(BasePermission):
 @api_view(['POST'])
 @permission_classes([IsAuthenticated, IsWorker])
 def set_color(request):
+  """
+    FO: add field 'group' in JWT token to reduce
+        number of request to DB
+    FO: use stateless authentification for workers
+        because only id is needed
+    FO: make bulk_create for batches of MapActions
+  """
   rdata = dict(request.data)
   rdata.pop('date_time', None)
   rdata.pop('user', None)
@@ -43,6 +62,12 @@ def set_color(request):
 @api_view(['POST'])
 @permission_classes([IsAuthenticated, IsBot])
 def tg_new_player(request):
+  """
+    FO: add field 'group' in JWT token to reduce
+        number of request to DB
+    FO: use stateless authentification for bots
+        because only id is needed
+  """
   creator_workers = models.Creators.objects.filter(owner=request.data['owner'])
   rsr = ser.CreatorsRequestSerializer(many=True)
   if len(creator_workers):
