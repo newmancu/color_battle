@@ -9,8 +9,7 @@ from rest_framework_simplejwt.views import (
 urlpatterns = [
   path('setcolor', views.set_color, name='setcolor'),
   path('tg/', include([
-    path('new_user', views.tg_new_user, name='tg_new_user'),
-    path('bot_connect', views.tg_bot_connect, name='bot_connect'),
+    path('new_player', views.tg_new_player, name='tg_new_player'),
   ])),
 
   path('token/', include([

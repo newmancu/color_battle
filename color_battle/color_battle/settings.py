@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/4.0/ref/settings/
 
 from pathlib import Path
 import os
+from datetime import timedelta
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -134,7 +135,11 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework_simplejwt.authentication.JWTAuthentication',
-    )
+    ),
+}
+
+SIMPLE_JWT = {
+    'ACCESS_TOKEN_LIFETIME':timedelta(hours=1),
 }
 
 CHANNEL_LAYERS = {
@@ -153,3 +158,18 @@ CHANNEL_LAYERS = {
 
 
 ASGI_APPLICATION = 'color_battle.asgi.application'
+
+
+"""GAME SETTINGS"""
+
+ACCOUNT_NAMES = [
+  'Apricots', 'Avocados', 'Crab', 'Eggs', 'Fig', 'Guava', 'Kiwi', 'Lime', 'Melon',
+  'Nectarine', 'Oranges', 'Olive' 'Chupa_Chupa', 'Quince', 'Papaya', 'Pineapple',
+  'Strawberries', 'Wolfberry', 'Xigua', 'Yangmei', 'Zucchini'
+]
+ACCOUNT_ADJ = [
+  'Astringency', 'Acidic', 'Acrid', 'Burnt', 'Buttery', 'Cardboard', 'Candy',
+  'Caustic', 'Chalky', 'Chemical', 'Clean', 'Delicate', 'Earthy', 'Jammy',
+  'Piquant', 'Musty', 'Medicinal', 'Jammy', 'Resinous', 'Sulfur', 'Tart'
+]
+ACCOUNT_ID = None

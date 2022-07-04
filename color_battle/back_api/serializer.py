@@ -10,3 +10,15 @@ class MapActionSerializer(ModelSerializer):
   class Meta:
     model = models.MapAction
     fields = '__all__'
+
+
+class CreatorsSerializer(ModelSerializer):
+
+  class Meta:
+    model = models.Creators
+    fields = '__all__'
+
+
+class CreatorsRequestSerializer(Serializer):
+  w_username = sr.CharField()
+  w_password = sr.CharField()
