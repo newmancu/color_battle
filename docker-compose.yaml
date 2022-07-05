@@ -14,6 +14,7 @@ services:
       - redis
     volumes:
       - ./color_battle:/usr/src/web/color_battle
+      - static_files:/usr/src/web/static_files
   web_ws:
     build: .
     command: bash -c "cd ./color_battle && uvicorn --host 0.0.0.0 --port 8001 --reload color_battle.asgi:application "
@@ -24,6 +25,7 @@ services:
       - web
     volumes:
       - ./color_battle:/usr/src/web/color_battle
+      - static_files:/usr/src/web/static_files
   web_game_map:
     build: ./GameMap
     command: uvicorn main:app --reload --host 0.0.0.0 --port 8002
@@ -33,8 +35,8 @@ services:
     restart: always
     env_file:
       - ./.dev.env
-    # volumes:
-    #   - static_files:/usr/src/web/static_files
+    volumes:
+      - static_files:/usr/src/web/static_files
   db:
     image: postgres
     restart: always
@@ -53,6 +55,7 @@ services:
       - web_ws
     volumes:
       - ./logs/nginx/:/var/log/nginx
+      - static_files:/usr/src/web/static_files
   redis:
     image: redis
     volumes:
@@ -61,3 +64,4 @@ services:
 volumes:
   db_volume:
   redis_db:
+  static_files:

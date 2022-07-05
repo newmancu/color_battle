@@ -9,5 +9,9 @@ class AdminMapAction(admin.ModelAdmin):
 class AdminCreators(admin.ModelAdmin):
   pass
 
+class AdminMapBackUp(admin.ModelAdmin):
+  pass
+
 admin.site.register(models.MapAction, AdminMapAction)
 admin.site.register(models.Creators, AdminCreators)
+admin.site.register(models.MapBackUp, AdminMapBackUp)

@@ -126,6 +126,7 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/4.0/howto/static-files/
 
 STATIC_URL = 'static/'
+STATIC_ROOT = os.environ.get('STATIC_ROOT')
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.0/ref/settings/#default-auto-field
@@ -173,3 +174,7 @@ ACCOUNT_ADJ = [
   'Piquant', 'Musty', 'Medicinal', 'Jammy', 'Resinous', 'Sulfur', 'Tart'
 ]
 ACCOUNT_ID = None
+MAP_HOST=os.environ.get('MAP_HOST')
+MAP_PORT=os.environ.get('MAP_PORT')
+MAP_URL = f"http://{MAP_HOST}:{MAP_PORT}"
+BACKUP_STEP = 100

@@ -9,3 +9,4 @@ channels-redis>=3.4.0
 uvicorn>=0.18.2
 websockets>=10.3
 wsproto>=1.1.0
+requests>=2.25.1

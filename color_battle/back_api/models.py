@@ -157,3 +157,12 @@ def create_worker(*args, **kwargs):
 
   settings.WORKER_GROUP.user_set.add(worker)
   return worker, username, password
+
+
+class MapBackUp(models.Model):
+  file = models.FilePathField(
+    path='/usr/src/web/static_files/map'
+  )
+  date = models.DateTimeField(
+    auto_now=True
+  )

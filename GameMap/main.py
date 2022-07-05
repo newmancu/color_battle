@@ -33,7 +33,7 @@ async def set_color(item: schemas.Item):
 async def set_color():
   global color_map
   fp = schemas.FilePath(file_path=await color_map.save())
-  fp.file_path = os.path.join(settings['STATIC_URL'], fp.file_path)
+  fp.file_path = fp.file_path
   return JSONResponse(content=fp.dict(),status_code=status.HTTP_201_CREATED)
 
 @app.post("/load")

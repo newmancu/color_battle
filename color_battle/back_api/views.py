@@ -1,11 +1,36 @@
+from django.conf import settings
 from rest_framework.response import Response
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated, BasePermission
 from rest_framework import status
 from back_api import serializer as ser
 from back_api import models
-# from back_api.utils import Map
+from threading import Thread
+import requests
+import json
 
+
+"""MICROSERVICE REQUESTS"""
+def micro_set_color(data):
+  data.pop('user', None)
+  data.pop('date_time', None)
+  requests.post(
+    f'{settings.MAP_URL}/set_color',
+    headers={
+      'Content-Type': 'application/json'
+    },
+    data=json.dumps(data)
+  )
+
+def micro_save():
+  res = requests.post(
+    f'{settings.MAP_URL}/save',
+    headers={
+      'Content-Type': 'application/json'
+    }
+  )
+  if res.status_code == 201:
+    models.MapBackUp.objects.create(file=res.json()['file_path'])
 
 """Permisions"""
 class IsBot(BasePermission):
@@ -53,8 +78,11 @@ def set_color(request):
   rdata['user'] = request.user.id
   sr = ser.MapActionSerializer(data=rdata)
   if sr.is_valid():
-    # utils.add_color(sr.validated_data['color'])
-    sr.save()
+    Thread(target=micro_set_color, args=(sr.validated_data.copy(),)).start()
+    inst = sr.save()
+    
+    if not (inst.id % settings.BACKUP_STEP):
+      Thread(target=micro_save).start()
     return Response(status=status.HTTP_201_CREATED)
   return Response(data={'error':sr.errors},status=status.HTTP_400_BAD_REQUEST)
 

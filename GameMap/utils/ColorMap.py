@@ -22,7 +22,7 @@ class ColorMap:
     file = f"{self.file_path}_{datetime.now().strftime('%d-%m-%YT%H:%M:%S')}.png"
     fp = os.path.join(self.file_root,  file)
     self.img_field.save(fp, 'PNG')
-    return f'{self.file_path}/{file}'
+    return file
 
   async def load(self, path: schemas.FilePath):
     async with self.lock:
