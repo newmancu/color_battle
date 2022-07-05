@@ -27,6 +27,7 @@ services:
   web_game_map:
     build: ./GameMap
     command: uvicorn main:app --reload --host 0.0.0.0 --port 8002
+    # command: gunicorn -k uvicorn.workers.UvicornWorker -b 0.0.0.0:8002 -w 1 main:app
     ports:
       - 8002:8002
     restart: always
