@@ -16,7 +16,7 @@ services:
       - ./color_battle:/usr/src/web/color_battle
   web_ws:
     build: .
-    command: bash -c "cd ./color_battle && daphne -b 0.0.0.0 -p 8001 color_battle.asgi:application"
+    command: bash -c "cd ./color_battle && uvicorn --host 0.0.0.0 --port 8001 --reload color_battle.asgi:application "
     restart: always
     env_file:
       - ./.dev.env
@@ -41,7 +41,7 @@ services:
       - db
       - web_ws
     volumes:
-      - ./logs/nginx/:/val/log/nginx
+      - ./logs/nginx/:/var/log/nginx
   redis:
     image: redis
     volumes:

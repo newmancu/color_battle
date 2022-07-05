@@ -16,11 +16,11 @@ class ColorMapConsumer(AsyncJsonWebsocketConsumer):
   
   async def disconnect(self, code):
 
-    await self.send_json({
-      "message": "Disconnected"
-    })
+    # await self.send_json({
+    #   "message": "Disconnected"
+    # })
     print(f'close {code}')
-    await self.close()
+    # await self.close()
 
   async def receive_json(self, data):
     msg = data

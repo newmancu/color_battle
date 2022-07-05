@@ -63,7 +63,10 @@ class QueryAuthMiddlewaer:
       token = tokens['token']
       user = await self.jwt_auth.authenticate(token)
     except:
-      user = AnonymousUser()
+      # user = AnonymousUser()
+      raise ValueError(
+       "No user JWT token was sent"             
+      )
     scope['user'] = user
     return await self.inner(scope, recive, send)
 
