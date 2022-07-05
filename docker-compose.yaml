@@ -24,6 +24,16 @@ services:
       - web
     volumes:
       - ./color_battle:/usr/src/web/color_battle
+  web_game_map:
+    build: ./GameMap
+    command: uvicorn main:app --reload --host 0.0.0.0 --port 8002
+    ports:
+      - 8002:8002
+    restart: always
+    env_file:
+      - ./.dev.env
+    # volumes:
+    #   - static_files:/usr/src/web/static_files
   db:
     image: postgres
     restart: always
