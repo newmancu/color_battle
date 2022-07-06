@@ -16,4 +16,6 @@ urlpatterns = [
     path('', TokenObtainPairView.as_view(), name='token_obtain_pair'),
     path('refresh/', TokenRefreshView.as_view(), name='token_refresh'),
   ])),
+  path('internal', views.internal_msg, name='internal')
+
 ]

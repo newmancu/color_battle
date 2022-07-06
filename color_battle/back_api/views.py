@@ -1,4 +1,5 @@
 from django.conf import settings
+from django.shortcuts import render
 from rest_framework.response import Response
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated, BasePermission
@@ -6,6 +7,8 @@ from rest_framework import status
 from back_api import serializer as ser
 from back_api import models
 from threading import Thread
+from channels.layers import get_channel_layer
+from asgiref.sync import async_to_sync
 import requests
 import json
 
@@ -120,3 +123,18 @@ def tg_new_player(request):
     rsr.is_valid(True)
     return Response(data=rsr.validated_data, status=status.HTTP_201_CREATED)
   return Response(data={'errors':sr.errors},status=status.HTTP_400_BAD_REQUEST)
+
+
+@api_view(['POST'])
+def internal_msg(request):
+  try:
+    cl = get_channel_layer()
+    data = request.data
+    async_to_sync(cl.group_send)('map', data)
+    return Response(status=status.HTTP_200_OK)
+  except:
+    return Response(status=status.HTTP_405_METHOD_NOT_ALLOWED)
+
+
+def index(request):
+  return render(request, 'color_battle/index.html')

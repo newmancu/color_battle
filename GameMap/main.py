@@ -1,5 +1,6 @@
 import os
 import pickle
+import requests
 
 from fastapi import FastAPI, status
 from fastapi.staticfiles import StaticFiles
@@ -10,7 +11,8 @@ from utils.ColorMap import ColorMap
 settings = {
   'SIZE': tuple(map(int, os.environ.get('MAP_SIZE', '128,128').split(','))),
   'STATIC_ROOT': os.environ.get('STATIC_ROOT', '/usr/src/GameMap/staticfiles'),
-  'STATIC_URL': os.environ.get('STATIC_URL', '/static')
+  'STATIC_URL': os.environ.get('STATIC_URL', '/static'),
+  'WEB_URL': f"http://{os.environ.get('WEB_HOST', 'localhost')}:{os.environ.get('WEB_PORT', '8000')}/api/internal",
 }
 
 app = FastAPI()
@@ -27,6 +29,12 @@ color_map = ColorMap(settings['SIZE'], settings['STATIC_ROOT'])
 async def set_color(item: schemas.Item):
   global color_map
   await color_map.set_color(item)
+  # change to async
+  requests.post(
+    settings['WEB_URL'],
+    headers={'Content-Type':'application/json'},
+    data=item.json()
+  )
   return JSONResponse(content={}, status_code=status.HTTP_201_CREATED)
 
 @app.post("/save")
