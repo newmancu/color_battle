@@ -37,6 +37,14 @@ services:
       - ./.dev.env
     volumes:
       - static_files:/usr/src/web/static_files
+  tg_bot:
+    build: ./GameBot
+    command: python3 main.py
+    restart: always
+    env_file:
+      - ./.dev.env
+    depends_on:
+      - web
   db:
     image: postgres
     restart: always

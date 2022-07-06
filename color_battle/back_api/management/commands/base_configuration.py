@@ -1,7 +1,7 @@
 from django.core.management.base import BaseCommand, CommandError
 from django.contrib.auth.models import User, Group, Permission
 from django.contrib.contenttypes.models import ContentType
-
+import os
 
 class Command(BaseCommand):
   help = "startup command"
@@ -38,4 +38,15 @@ class Command(BaseCommand):
     if not User.objects.filter(username='admin').exists():
       User.objects.create_superuser('admin', 'admin@jam.as', 'admin')
       self.stdout.write(self.style.SUCCESS(f'adding default superuser'))
-      
+
+
+    bot_group = Group.objects.get(name='Bot')
+    try:
+      bot = User.objects.get(username=os.environ.get('BOT_USERNAME', 'bot_1'))
+    except:
+      bot = User.objects.create_user(
+        username=os.environ.get('BOT_USERNAME', 'bot_1'),
+        password=os.environ.get('BOT_PASSWORD', 'bot_1')
+      )
+    bot.groups.add(bot_group)
+    self.stdout.write('Bot added: ' + str(bot))
